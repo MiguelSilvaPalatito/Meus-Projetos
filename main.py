@@ -17,3 +17,5 @@ while True:
         print("selecione um numero valido!")
 
 print("muda")
+
+print("okkok")
