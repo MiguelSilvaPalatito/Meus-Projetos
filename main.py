@@ -1,21 +1,24 @@
+print("ensira as informações para acessar")
+
 while True:
-    n1 = int(input("selecione umas das opções: \n1 - aluno \n2 - professor \n3 - planos \n:"))
+    n1 = input("Nome de usuario: ")
+    n2 = input("Senha: ")
 
-    if n1 == 1:
-        print("opção 1 em desenvolvimento")
+    if n1 == "JulianaCabral" and n2 == "171524":
+        print("iniciando sistema")
         break
-
-    elif n1 == 2:
-        print("opção 2 em desenvolvimento")
-        break
-    
-    elif n1 == 3:
-        print("opção 3 em desenvolvimento")
-        break
-
     else:
-        print("selecione um numero valido!")
+        print("Usuario ou senha incorreto!")
+        
+print("Menu de configuração\n")
+n1 = input("""1 - Produtos
 
-print("muda")
+2 - Cliente
 
-print("okkok")
+3 - Vendas
+
+4 - Relatórios
+
+5 - Sair
+
+Escolha: """)
