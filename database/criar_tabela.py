@@ -1,7 +1,7 @@
-import sqlite3
+from .conexao import conectar
 
 def criar_tabela():
-    with sqlite3.connect("tabelas_da_mamae.db") as conexao:
+    with conectar() as conexao:
         cursor = conexao.cursor()
 
         cursor.execute("""
@@ -11,5 +11,3 @@ def criar_tabela():
         preco INTEGER NOT NULL CHECK (preco > 0),
         estoque INTEGER NOT NULL CHECK (estoque >= 0),
         ativo BOOLEAN NOT NULL DEFAULT 1)""")
-
-        #colocar para sempre que o user entrar esse codigo iniciar

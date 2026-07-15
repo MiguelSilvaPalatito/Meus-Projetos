@@ -1,3 +1,6 @@
+from database.criar_tabela import criar_tabela
+from models.produtos import adicionar_produto
+
 print("ensira as informações para acessar")
 
 while True:
@@ -9,16 +12,37 @@ while True:
         break
     else:
         print("Usuario ou senha incorreto!")
+
+criar_tabela()
         
-print("Menu de configuração\n")
-n1 = input("""1 - Produtos
 
-2 - Cliente
+def main():
+    print("Menu de configuração\n")
+    n1 = input("""
+                1 - Produtos
 
-3 - Vendas
+                2 - Cliente
 
-4 - Relatórios
+                3 - Vendas
 
-5 - Sair
+                4 - Relatórios
 
-Escolha: """)
+                5 - Sair
+
+                Escolha: 
+                """)
+
+    if n1 == "1":
+        print("Opções de configuração do Produto")
+        h1 = input("""
+                    1 - Adicionar Produto
+                                    
+                    2 - Listar
+                                    
+                    3 - Alterar
+                   
+                    Escolha: 
+                    """)
+        
+        if h1 == "1":
+            adicionar_produto()
