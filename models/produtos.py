@@ -1,5 +1,5 @@
 from database.conexao import conectar
-from gym_manager.main import main
+import sqlite3
 
 class Produto:
     def __init__(self, nome, preco, estoque):
@@ -27,60 +27,106 @@ def converter_preco(preco):
 
 
 
-
-
 def adicionar_produto():
-    nome = input("Nome: ")
     while True:
-        try:
-            preco = converter_preco(input("Preço: "))
-            break
-        except ValueError:
-            print("Valor invalido!")
 
-    
-    estoque = int(input("Estoque: "))
+        nome = input("Nome: ")
 
-    produto = Produto(nome, preco, estoque)
+        while True:
+            try:
+                preco = converter_preco(input("Preço: "))
+                break
+            except ValueError:
+                print("Valor inválido!")
 
-    def salvar_produto(produto):
+        while True:
+            try:
+                estoque = int(input("Estoque: "))
+                break
+            except ValueError:
+                print("Digite apenas números.")
+
+        produto1 = Produto(nome, preco, estoque)
+
+        def salvar_produto(produto1):
             with conectar() as conexao:
-                cursor = conexao.cursor()
+                            cursor = conexao.cursor()
+
+                            try:
+                                cursor.execute("""
+                                INSERT INTO Produtos(nome, preco, estoque)
+                                VALUES (?, ?, ?)
+                                """, (
+                                        produto1.nome,
+                                        produto1.preco,
+                                        produto1.estoque
+                                            ))
+
+                                print("Produto salvo com sucesso!")
+                                return False
+
+                            except sqlite3.IntegrityError:
+                                print("Já existe um produto com esse nome!")
+                                return True
                             
-                cursor.execute("""INSERT INTO Produtos(nome, preco, estoque)
-                            VALUES (?, ?, ?)
-                            """,
-                (
-                    produto.nome,
-                    produto.preco,
-                    produto.estoque
-                )
-                )
+        salvar_produto(produto1)
+        
+        while True:
+            ok = False
+            resposta = input(
+                "Deseja adicionar um novo produto? (s/n): "
+            ).lower()
 
-    salvar_produto(produto)
+            if resposta == "s":
+                break
 
+            elif resposta == "n":
+                ok = True
+                break
 
+            else:
+                print("Resposta inválida!")
+        
+        if ok:
+            break
 
+        
 
 
 def listar_produtos():
-    with conectar() as conexao:
-        cursor = conexao.cursor()
+    while True:
+        with conectar() as conexao:
+            cursor = conexao.cursor()
 
-        cursor.execute("""
-                        SELECT * FROM Produtos
-                        """)
-    
-        produtos = cursor.fetchall()
+            cursor.execute("""
+                            SELECT * FROM Produtos
+                            """)
+        
+            produtos = cursor.fetchall()
 
-    for produto in produtos:
-        print(f"""
-                ID: {produto[0]}
-                Nome: {produto[1]}
-                Preço: R${produto[2] / 100:.2f}
-                Estoque: {produto[3]}
-                ---------------------
-                """)
+        for produto in produtos:
+            print(f"""
+ID: {produto[0]}
+Nome: {produto[1]}
+Preço: R${produto[2] / 100:.2f}
+Estoque: {produto[3]}
+---------------------
+""")
+            
+        while True:
+            ok = False
+            n2 = input("Deseja verificar a lista novamente? s/n: ").lower()
+
+            if n2 == "s":
+                break
+            elif n2 == "n":
+                ok = True
+                break
+            else:
+                print("resposta invalida digite novamente!")
+
+        if ok:
+            break
 
 
 
@@ -89,18 +135,17 @@ def listar_produtos():
 def alterar():
     while True:
         n1 = input("""
-                    Digite o numero da opção que deseja alterar
+Digite o numero da opção que deseja alterar
 
-                    1 - Alterar Nome
+1 - Alterar Nome
                                 
-                    2 - Alterar Preço
+2 - Alterar Preço
                                 
-                    3 - Alterar Quantidade/Estoque
+3 - Alterar Quantidade/Estoque
                 
-                    4 - sair
+4 - sair
                                 
-                    Opção: 
-                    """)
+Opção: """)
 
         if n1 == "1":
             while True:
@@ -115,9 +160,10 @@ def alterar():
 
                 for produto in produtos:
                     print(f"""
-                            ID: {produto[0]} 
-                            Nome: {produto[1]}
-                            """)
+ID: {produto[0]} 
+Nome: {produto[1]}
+---------------------
+""")
                 
                 while True:
                     h1 = input("Digite o ID do produto que deseja mudar: ")
@@ -185,10 +231,11 @@ def alterar():
 
                 for produto in produtos:
                     print(f"""
-                            ID: {produto[0]} 
-                            Nome: {produto[1]}
-                            Preço R$: {produto[2] / 100:.2f}
-                            """)
+ID: {produto[0]} 
+Nome: {produto[1]}
+Preço R$: {produto[2] / 100:.2f}
+---------------------
+""")
                 
                 while True:
                     h1 = input("Digite o ID do produto que deseja mudar o preço: ")
@@ -256,10 +303,11 @@ def alterar():
 
                 for produto in produtos:
                     print(f"""
-                            ID: {produto[0]} 
-                            Nome: {produto[1]}
-                            Quantidade em estoque: {produto[3]}
-                            """)
+ID: {produto[0]} 
+Nome: {produto[1]}
+Quantidade em estoque: {produto[3]}
+---------------------
+""")
                 
                 while True:
                     h1 = input("Digite o ID do produto que deseja mudar a quantidade no estoque: ")
@@ -315,7 +363,7 @@ def alterar():
                     break
 
         elif n1 == "4":
-            return main()
+            break
             
 
         else:
